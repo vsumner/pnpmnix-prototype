@@ -66,6 +66,16 @@ run('root-preinstall-original-body', [spec['bash'], '-c', root_script])
 run('materialize', common + ['install', '--recursive', '--offline', '--frozen-lockfile',
                             '--trust-lockfile', '--ignore-scripts', '--reporter=ndjson'])
 
+# Capture raw linked payloads before header adaptation and approved builds.
+raw_inventory = {}
+for p in sorted(project.rglob('*')):
+    rel = str(p.relative_to(project))
+    if p.is_symlink(): raw_inventory[rel] = {'type':'link','target':os.readlink(p)}
+    elif p.is_file(): raw_inventory[rel] = {'type':'file','sha256':hashlib.sha256(p.read_bytes()).hexdigest(),
+        'executable':bool(p.stat().st_mode & 0o111),'bytes':p.stat().st_size}
+    elif p.is_dir(): raw_inventory[rel] = {'type':'directory'}
+(out/'raw-inventory.json').write_text(json.dumps(raw_inventory,sort_keys=True)+'\n')
+
 # Adapt interpreter headers only on detached, private registry files. Keep all
 # bodies and original manifests/configuration byte-identical, including fixtures.
 targets = {p.resolve() for p in project.rglob('*')

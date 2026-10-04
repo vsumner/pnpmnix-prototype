@@ -111,6 +111,27 @@ let
       archive = "${smokeGroup}/${react.storeName}";
     };
   };
+  fixtureCatalog = builtins.fromJSON (builtins.readFile ./tests/catalog.json);
+  fixtureAcquisition = mk "pnpmnix-fixture-acquisition" ./scripts/acquire.py {
+    archive_map = builtins.mapAttrs (_: row: {
+      inherit (row) integrity originalUrl name version;
+      archive = fetch row.storeName row.originalUrl row.integrity;
+    }) fixtureCatalog;
+  };
+  fixture = branch: source: mk "pnpmnix-fixture-prepared-${branch}" ./scripts/prepare-fixture.py (common // {
+    inherit branch source;
+    archive_map = "${fixtureAcquisition}/archive-map.json";
+    patcher = vite.patcher;
+  });
+  seal = profile: prepared: source: store: inputs: hooks: deferred:
+    mk "pnpmnix-environment-${profile}" ./scripts/bundle.py {
+      inherit profile prepared source store hooks deferred;
+      source_hashes = inputs;
+      trees = ./scripts/trees.py;
+      tools = { inherit (common) pnpm node bash; git = "${pkgs.git}/bin/git";
+        launcher = "${caller}/bin/node"; only_allow = "${onlyAllow}/bin/only-allow"; };
+      npm_prefix = onlyAllow;
+    };
 in assert validMap; rec {
   smoke = mk "pnpmnix-offline-smoke" ./scripts/smoke.py (common // { acquisition = smokeAcquisition; });
   missing = mk "pnpmnix-missing-control" ./scripts/negative.py (common // { acquisition = smokeAcquisition; mode = "missing"; });
@@ -123,6 +144,34 @@ in assert validMap; rec {
     inherit prepared; acquired = "${materialized}/store"; patch = "${pkgs.patch}/bin/patch";
     graph_check = ./scripts/graph-check.cjs;
   });
+  fixtureA = fixture "a" ./tests/fixtures/a;
+  fixtureB = fixture "b" ./tests/fixtures/b;
+  fixtureC = fixture "c" ./tests/fixtures/c;
+  environments = {
+    vite = seal "vite" prepared source "${materialized}/store" vite.source_hashes [
+      { project = "."; event = "preinstall"; original_body = true; }
+      { project = "."; event = "postinstall"; }
+    ] "Browser downloads disabled; denied dependency hooks remain pending; browser/socket services unqualified.";
+    fixture-a = seal "fixture-a" fixtureA ./tests/fixtures/a "${fixtureA}/store"
+      (builtins.fromJSON (builtins.readFile ./tests/inputs-a.json)) [
+        { project = "."; event = "preinstall"; }
+        { project = "."; event = "postinstall"; }
+        { project = "packages/lib"; event = "postinstall"; }
+      ] "Small qualification fixture only; native source compilation untested.";
+    fixture-b = seal "fixture-b" fixtureB ./tests/fixtures/b "${fixtureB}/store"
+      (builtins.fromJSON (builtins.readFile ./tests/inputs-b.json)) [
+        { project = "."; event = "preinstall"; }
+        { project = "."; event = "postinstall"; }
+        { project = "packages/lib"; event = "postinstall"; }
+      ] "Small qualification fixture only; native source compilation untested.";
+    fixture-c = seal "fixture-c" fixtureC ./tests/fixtures/c "${fixtureC}/store"
+      (builtins.fromJSON (builtins.readFile ./tests/inputs-c.json)) [
+        { project = "."; event = "preinstall"; }
+        { project = "."; event = "postinstall"; }
+        { project = "packages/lib"; event = "postinstall"; }
+        { project = "packages/new-workspace"; event = "postinstall"; }
+      ] "Small qualification fixture only; native source compilation untested.";
+  };
   plan = {
     inherit mapping;
     group_outputs = builtins.mapAttrs (_: group: group.outPath) groups;

@@ -1,0 +1,16 @@
+{
+  "name": "@maintenance/new-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.cjs",
+  "bin": {
+    "maintenance-workspace": "bin.cjs"
+  },
+  "peerDependencies": {
+    "react": "19.3.0"
+  },
+  "scripts": {
+    "postinstall": "node ../../hooks.cjs new-workspace-postinstall",
+    "test": "node check.cjs"
+  }
+}

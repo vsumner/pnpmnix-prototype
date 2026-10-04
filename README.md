@@ -1,6 +1,6 @@
 # pnpmnix prototype
 
-A small, frozen example of Nix-owned archive acquisition followed by native pnpm offline materialization. Native pnpm owns package-store indexes, dependency graphs, peers, patches, platform selection and linking. This prototype does not implement another package manager.
+A small, frozen example of Nix-owned archive acquisition followed by native pnpm offline materialization, with a local prepare → restore → stock pnpm command flow. Native pnpm owns package-store indexes, dependency graphs, peers, patches, platform selection and linking. This prototype does not implement another package manager.
 
 ## Run
 
@@ -19,6 +19,49 @@ python3 run.py --full
 ```
 
 The full run acquires 1,301 pinned archives in 32 stable groups, creates a fresh pnpm store offline, prepares a private dependency tree, restores it to another checkout, and checks native execution, platform packages, three patches, three representative peer/workspace resolutions, the Vite build and 26 focused assertions. The entry point prints the output paths and a separate retained artifact directory. Run logs and receipts stay outside this source bundle. Keep them private unless you review their generated paths and data.
+
+## Prepare → restore → stock pnpm
+
+`run.py` and `run.py --full` remain qualification tools. `pnpmnix.py` is the usable command flow for the reviewed profiles. A small workspace example, using fresh paths:
+
+```sh
+python3 pnpmnix.py prepare --profile fixture-a --output /tmp/pnpmnix-prepared-a
+mkdir /tmp/pnpmnix-dev
+cp -R tests/fixtures/a/. /tmp/pnpmnix-dev/
+git -C /tmp/pnpmnix-dev init
+python3 pnpmnix.py restore --prepared /tmp/pnpmnix-prepared-a/prepared.json \
+  --checkout /tmp/pnpmnix-dev --state /tmp/pnpmnix-state --run-checkout-hooks
+python3 pnpmnix.py pnpm --checkout /tmp/pnpmnix-dev --state /tmp/pnpmnix-state \
+  --offline -- run test
+python3 pnpmnix.py pnpm --checkout /tmp/pnpmnix-dev --state /tmp/pnpmnix-state \
+  -- --filter @maintenance/app add picocolors@1.1.1 --save-exact
+```
+
+`prepare --profile vite` uses the original frozen Vite inputs and prints its source path. Restore into a writable checkout at the pinned Vite revision listed below, with matching manifests, complete lockfile stream, workspace configuration, patches and declared source/hook inputs. The `fixture-a`, `fixture-b` and `fixture-c` profiles are qualification examples: A has semver 6, B semver 7, and C adds a workspace with a peer, script and bin. These are the only preparation inputs accepted by the CLI. Arbitrary lockfile inventory generation remains unsupported.
+
+Preparation produces an immutable Nix environment and a local `prepared.json` handle. It seals exact dependency/store inventories, explicit input hashes, native project discovery, platform/tool bytes and the checkout hook plan. A changed preparation identity needs a matching reviewed profile; ordinary development edits can continue with stock pnpm without preparing again. Unrelated source files and edits are preserved during restore. A source-owned workspace dependency directory is preserved only when the frozen source and prepared subtree are identical; mixed source/generated directories are rejected.
+
+Restore verifies inputs and configuration before invoking native discovery, checks both immutable trees, copies to private writable inodes, and verifies the copies. It replaces only owned root/workspace dependency directories, including directories remembered from removed workspaces. First restore requires those generated directories to be absent. An existing unowned `node_modules`, redirected Git hook, changed hook owned outside the flow, or unsupported configuration fails safely. Empty obsolete workspace directories are removed only after their owned generated trees have been retained outside the checkout.
+
+Stock relocation to a new private store can reimport raw package files. Preparation records the regular package payload changes made by header adaptation and approved builds; restore reapplies those exact bytes after native linking and verifies the complete resulting dependency tree. pnpm still writes its own graph, workspace paths and private store metadata. No package-store index or build-completion flag is forged. Mutable pnpm operations retain an inherited `PNPM_CONFIG_STORE_DIR`, private data/home/config/cache paths, copy imports and empty auth configuration, including for automatic install children. The stock wrapper rejects global operations, alternate roots/stores, pnpmfile composition and managed configuration overrides. Use its `--offline` flag before `--` to make offline intent persist into children; available metadata and payloads are still required.
+
+Restore's linking install explicitly uses `--ignore-scripts`. Its default result says **checkout hooks pending**. `--run-checkout-hooks` runs only the profile's assigned root/workspace hooks and verifies the executable checkout Git hook before reporting completion. It requires a normal Git checkout; Git worktree indirection and custom `core.hooksPath` are unsupported. For Vite, the original preinstall body is executed explicitly because this pnpm version no-ops its only-allow script, followed by the root postinstall hook. The fixture runs root preinstall/postinstall and lib postinstall; C also runs the new workspace postinstall. Browser downloads and denied dependency hooks remain deferred. The source workspace bin retains its original `/usr/bin/env node` header: strict Nix preparation checks its body with declared Node, and host qualification checks direct bin execution.
+
+Ordinary stock pnpm maintenance uses scripts enabled unless the caller explicitly requests otherwise. Dependency/root/workspace hooks can replay; the wrapper does not claim their completion after an arbitrary stock command. Those development commands run outside the Nix build sandbox and own their normal mutable effects. Inactive virtual-store package versions are harmless. Matching restore provides clean generated layout and approved payload reuse; stock workspace removal alone is not promised to clean every dangling bin or orphan directory.
+
+A checkout has one private state directory and an owned `.pnpmnix-state.json` binding/lock file. That generated marker contains a local path: keep it out of commits and public bundles. Do not move or hand-edit the state/marker. Restore journals directory moves and publishes `active.json` only after verification. Ordinary errors and caught interruption roll back dependency trees, retaining failed/staged trees and all previous artifacts. After an abrupt process exit, stock commands stop until recovery:
+
+```sh
+python3 pnpmnix.py recover --checkout /tmp/pnpmnix-dev --state /tmp/pnpmnix-state
+```
+
+Recovery restores the previous dependencies. Checkout hooks or arbitrary script effects are not transactionally undone and may need repair after a hook failure. Locking excludes concurrent wrapper operations; other tools must not write the checkout during activation. No power-loss or real disk-exhaustion guarantee is claimed. Every attempt and previous private store is retained; this command performs no GC or automatic artifact cleanup.
+
+Run the focused flow checks with a fresh external artifact directory:
+
+```sh
+python3 tests/flow-check.py --artifacts /tmp/pnpmnix-flow-check
+```
 
 ## Requirements and pins
 
@@ -50,7 +93,7 @@ Archive acquisition, environment preparation and running scripts are separate ph
 
 Acquisition runs offline with `--ignore-scripts`. Preparation executes the captured root preinstall body with pnpm identity, installs offline without scripts, adapts interpreter headers only on detached package files, and invokes native pending rebuild under the captured allow/deny policy. Browser downloads remain deferred by the example's environment. Approved dependency hooks execute during preparation; denied hooks stay pending.
 
-Restore makes a full writable private copy. It uses an explicit `--ignore-scripts` frozen offline install to relocate pnpm's own metadata, then separately runs the assigned root hook bodies. **Ordinary pnpm install can replay dependency hooks after relocation.** Transparent ordinary-install reuse is not claimed. No pnpm store/index writer is reimplemented and no completion flags are forged.
+The full qualification consumer makes a full writable private copy. It uses an explicit `--ignore-scripts` frozen offline install to relocate pnpm's own metadata, then separately runs the assigned root hook bodies. **Ordinary pnpm install can replay dependency hooks after relocation.** Transparent ordinary-install reuse is not claimed. No pnpm store/index writer is reimplemented and no completion flags are forged.
 
 The CommonJS adapter is experimental and specific to the tested native pnpm API/version. The Darwin Node launcher sets public `NODE_PATH` before exec for generated command context; it is not a general module-resolution guarantee. Header adaptation and this launcher need separate platform qualification. Registry payload bodies and original source configuration remain checked. Copies, symlinks and metadata are verified; cross-machine native built-output sharing and hardlink/APFS-copy optimization are not implemented.
 
@@ -64,6 +107,6 @@ Full checkout copying, verification, native preparation, cold per-archive Nix ov
 
 ## Remaining integration work
 
-Qualify another machine/platform and Nix setup; define arbitrary-project inventory generation and configuration composition; test actual add/update/remove/prune commands and their registry resolution; resolve ordinary hook replay; qualify native-output sharing across environments; and run full browser/socket-service behavior. The small fixture does not establish a 3,584-package pnpm semantic graph. Whole-output bit reproducibility is not claimed because experiment receipts contain timestamps and timings.
+Qualify another machine/platform and Nix setup; define arbitrary-project inventory generation and configuration composition; qualify standalone prune and arbitrary lifecycle behavior; qualify native-output sharing across environments; and run full browser/socket-service behavior. The command flow qualifies stock add/update/remove and workspace/source return in its small fixture; ordinary hook replay remains an explicit native behavior. The small fixture does not establish a 3,584-package pnpm semantic graph. Whole-output bit reproducibility is not claimed because experiment receipts contain timestamps and timings.
 
 No repository creation, commit, push or publication is part of running this source. Public distribution should include only these reviewed source/data/license files, never generated artifacts, downloaded inputs, stores, executables, logs or credentials. See `LICENSE` and `THIRD-PARTY-NOTICES.md`.

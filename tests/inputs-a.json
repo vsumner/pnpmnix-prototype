@@ -1,0 +1,15 @@
+{
+  "pnpm-lock.yaml": "44e91e320a6562463bb510f1d690ea2bec04bbfafd0d66d8d815e67c19d7ff4c",
+  "hooks.cjs": "b19c9afc673a50a1e6a3de14d920facd95db38be7bf2c65a36755f1d475d0043",
+  ".gitignore": "ff722f77051bc8935cac8a0c15a12209fe2d0ff412d35315a443b7c0b80a70f2",
+  "package.json": "cf67577dc61d8e1195912cc3b49bc292accf034d36ef2aa7e851b73b55b65502",
+  "oracle.cjs": "528c320936576067d027f7b0c641fbeb9f2ecc2fe4f3bb41ca2edd359a6898ca",
+  "pnpm-workspace.yaml": "1f13830e23f352fa737df571ed0fe386d8c356edc53412ebe899a2af791a7df1",
+  "patches/is-number.patch": "2bf98cae8973b8e351dfe473f9c657a1e93d7648460687234308d2dbdbb82d5f",
+  "packages/app/package.json": "f790e1b12fae9c2d09df4ddff11ce92e3ccf6d4531e18b3b0411826897e6921c",
+  "packages/app/index.cjs": "e21aed56b5de7a77b648f35d8098191cce8170547c3113c784779e95008669c8",
+  "packages/plugin/package.json": "e85b9d59190dce0ce0937b34100a11dda5425bb203338de0eb87acbc28461f56",
+  "packages/plugin/index.cjs": "25ac9ac84ad34fb2bbd82065342dc54ff6538d5e13726245686738409d77798f",
+  "packages/lib/package.json": "85c4ad7bebddd40f428e68e4671711f7e80f4514ac1a962cb3a565c3bb48e0ac",
+  "packages/lib/index.cjs": "e21aed56b5de7a77b648f35d8098191cce8170547c3113c784779e95008669c8"
+}

@@ -1,0 +1,21 @@
+{
+  "packages": [
+    "packages/*"
+  ],
+  "autoInstallPeers": true,
+  "strictPeerDependencies": true,
+  "excludeLinksFromLockfile": false,
+  "enableGlobalVirtualStore": false,
+  "hoistPattern": [
+    "*"
+  ],
+  "packageImportMethod": "copy",
+  "sideEffectsCache": false,
+  "allowBuilds": {
+    "esbuild": true
+  },
+  "patchedDependencies": {
+    "is-number@7.0.0": "patches/is-number.patch"
+  },
+  "preferSymlinkedExecutables": true
+}

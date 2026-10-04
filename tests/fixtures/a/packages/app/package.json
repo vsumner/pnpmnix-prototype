@@ -1,0 +1,11 @@
+{
+  "name": "@maintenance/app",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.cjs",
+  "dependencies": {
+    "@maintenance/lib": "workspace:*",
+    "@maintenance/plugin": "workspace:*",
+    "react": "19.3.0"
+  }
+}

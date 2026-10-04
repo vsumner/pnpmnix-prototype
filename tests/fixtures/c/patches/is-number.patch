@@ -1,0 +1,9 @@
+diff --git a/index.js b/index.js
+--- a/index.js
++++ b/index.js
+@@ -16,3 +16,5 @@
+   }
+   return false;
+ };
++
++module.exports.maintenancePatch = "verified-patch";

@@ -1,0 +1,17 @@
+{
+  "name": "pnpmnix-maintenance-fixture",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "pnpm@12.6.0",
+  "scripts": {
+    "preinstall": "node hooks.cjs root-preinstall",
+    "postinstall": "node hooks.cjs root-postinstall",
+    "test": "node oracle.cjs"
+  },
+  "dependencies": {
+    "esbuild": "0.28.2",
+    "is-number": "7.0.0",
+    "react": "19.3.0",
+    "semver": "7.8.5"
+  }
+}
