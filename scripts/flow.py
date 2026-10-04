@@ -6,10 +6,12 @@ from pathlib import Path
 import shutil
 import signal
 import subprocess
+import sys
 import time
 import uuid
 from contextlib import contextmanager
 from trees import copy_private, digest, entries, inventory, relative, require, verify
+from configuration import PROTECTED, configuration_paths, native_configuration, protected_configuration
 
 ROOT = Path(__file__).resolve().parent.parent
 RESERVE = 12 * 2**30
@@ -28,7 +30,7 @@ def write_json(path, value):
     tmp.replace(p)
 
 
-def command(args, cwd, env, logs, label, limit=600):
+def command(args, cwd, env, logs, label, limit=600, check=True):
     free_guard(logs)
     start = time.monotonic(); minimum = free_guard(logs)
     with (logs/(label+'.stdout')).open('x') as out, (logs/(label+'.stderr')).open('x') as err:
@@ -50,7 +52,9 @@ def command(args, cwd, env, logs, label, limit=600):
     write_json(logs/(label+'.json'), {'command':list(map(str,args)), 'exit':p.returncode,
         'seconds':time.monotonic()-start, 'minimum_sampled_free_bytes':minimum,
         'reserve_floor_GiB':10, 'polling_guard_GiB':12})
-    text = (logs/(label+'.stdout')).read_text() + (logs/(label+'.stderr')).read_text()
+    stdout = (logs/(label+'.stdout')).read_bytes(); stderr = (logs/(label+'.stderr')).read_bytes()
+    if not check: return {'exit':p.returncode, 'stdout':stdout, 'stderr':stderr}
+    text = (stdout+stderr).decode('utf-8',errors='replace')
     require(p.returncode == 0, label+' failed; retained logs: '+str(logs)+'\n'+text[-2500:])
     return text
 
@@ -100,7 +104,7 @@ def load_prepared(path):
     require(bundle.parent == Path('/nix/store') and bundle.is_dir() and not bundle.is_symlink(), 'expected immutable Nix output')
     require(digest(bundle/'environment.json') == handle['manifest_sha256'], 'prepared manifest corrupt')
     spec = json.loads((bundle/'environment.json').read_text())
-    require(spec['schema'] == 1 and spec['platform'] == 'aarch64-darwin' and
+    require(spec['schema'] in {1,2} and spec['platform'] == 'aarch64-darwin' and
             spec['pnpm_version'] == '12.6.0' and spec['node_version'] == '24.18.0', 'unsupported environment')
     require(spec['profile'] == handle['profile'], 'profile differs')
     for k,p in spec['tools'].items():
@@ -131,6 +135,9 @@ def environment(spec, state, store, offline=False):
         'PNPM_CONFIG_PREFER_SYMLINKED_EXECUTABLES':'true','PNPM_CONFIG_FETCH_RETRIES':'0',
         'PNPM_CONFIG_FETCH_TIMEOUT':'15000','LIFECYCLE_LOG_DIR':str(runtime/'effects'),
         'MAINTENANCE_ZONE':'private-development'}
+    # The exact local Hono profile retains stock default cmd shims.
+    if spec['profile'] in {'hono','hono-experiment'}:
+        env.pop('PNPM_CONFIG_PREFER_SYMLINKED_EXECUTABLES')
     return env
 
 
@@ -197,18 +204,38 @@ def validate_active(active, checkout, state):
                 'invalid generated dependency root: '+rel)
 
 
+def configuration_guard(spec, checkout, env):
+    # A missing root workspace would let native pnpm search outside this root.
+    root = safe_destination(checkout,'pnpm-workspace.yaml')
+    require(root.is_file(), 'root workspace configuration is required')
+    for name in ['.npmrc','.pnpmfile.cjs','.pnpmfile.mjs']:
+        p = safe_destination(checkout,name)
+        if p.exists():
+            require(name in spec['inputs'] and p.is_file() and digest(p) == spec['inputs'][name],
+                    'undeclared/changed auth or executable configuration: '+name)
+    if 'protected_configuration' not in spec:
+        # Retain compatibility with existing immutable handles. Only the
+        # consumed frozen configuration is read, without executing hooks.
+        source = Path(spec['source'])
+        for rel in ['pnpm-workspace.yaml','.npmrc']:
+            p = safe_destination(source,rel)
+            if p.exists(): require(rel in spec['inputs'] and digest(p) == spec['inputs'][rel], 'frozen configuration differs')
+        spec['protected_configuration'] = protected_configuration(native_configuration(spec['tools']['pnpm'],source,env))
+    current = protected_configuration(native_configuration(spec['tools']['pnpm'],checkout,env))
+    require(current == spec['protected_configuration'],
+            'build policy, access or managed scope changed; separate review required')
+
+
 def matching(spec, checkout, env, owned=()):
     for rel,sha in spec['inputs'].items():
         p = safe_destination(checkout,rel)
         require(p.is_file() and not p.is_symlink() and digest(p) == sha, 'preparation input mismatch: '+rel)
-    # No native pnpm invocation until every declared input and configuration
-    # path is checked: discovery itself may load a project's pnpmfile.
-    configuration = sorted(rel for rel in inventory(checkout,omit=tuple(set(spec['generated']) | set(owned))+('.git',))
-        if Path(rel).name in {'package.json','pnpm-workspace.yaml','.npmrc','pnpmfile.cjs','pnpm-lock.yaml'}
-        or Path(rel).name.startswith('.pnpmfile'))
-    require(configuration == spec['configuration'], 'configuration/manifest topology differs')
+    configuration_guard(spec,checkout,env)
     projects = discover(spec,checkout,env)
     require(projects == spec['projects'], 'workspace configuration/discovery differs')
+    expected_configuration = spec['configuration'] if spec['schema'] == 2 else configuration_paths(spec['source'],spec['projects'])
+    require(configuration_paths(checkout,projects) == expected_configuration,
+            'consumed configuration/manifest topology differs')
 
 
 def verify_dependencies(spec, checkout, store):
@@ -316,7 +343,7 @@ def restore(handle, checkout, state, run_hooks=False):
         for rel in roots:
             p = safe_destination(checkout,rel)
             require(not p.exists() or (previous is not None and rel in previous['owned']), 'unowned dependency directory: '+rel)
-        if run_hooks:
+        if run_hooks and spec['hooks']:
             require((checkout/'.git').is_dir() and not (checkout/'.git').is_symlink(), 'checkout hooks require a normal Git checkout; Git worktree indirection is unsupported')
             safe_destination(checkout,'.git/hooks/pre-commit')
             hooks_path = subprocess.run([spec['tools']['git'],'config','--local','--get','core.hooksPath'],
@@ -324,7 +351,7 @@ def restore(handle, checkout, state, run_hooks=False):
             require(hooks_path.returncode == 1, 'custom Git hooksPath is unsupported')
         original_roots = {r:(checkout/r).exists() for r in roots}
         hook = checkout/'.git/hooks/pre-commit'
-        if run_hooks and hook.exists():
+        if run_hooks and spec['hooks'] and hook.exists():
             require(previous is not None and previous.get('hook_sha256') == digest(hook), 'existing checkout hook is not owned by this activation')
         verify(Path(spec['prepared'])/'workspace',spec['workspace_inventory']); verify(spec['store'],spec['store_inventory'])
         bytes_needed = sum(x.get('bytes',0) for x in spec['workspace_inventory'].values()) + sum(x.get('bytes',0) for x in spec['store_inventory'].values())
@@ -360,7 +387,7 @@ def restore(handle, checkout, state, run_hooks=False):
             require(any(x.get('name') == 'pnpm:execution-time' for x in events), 'missing reporter control')
             require(not any(x.get('name') == 'pnpm:lifecycle' for x in events), 'unexpected lifecycle replay during restore')
             matching(spec,checkout,env); restore_payload(spec,checkout); verify_dependencies(spec,checkout,store)
-            if run_hooks:
+            if run_hooks and spec['hooks']:
                 for i, task in enumerate(spec['hooks']):
                     cwd = checkout if task['project'] == '.' else checkout/relative(task['project'])
                     if task.get('original_body'):
@@ -385,7 +412,7 @@ def restore(handle, checkout, state, run_hooks=False):
                 'profile':spec['profile'],'store':str(store),'owned':spec['generated'],
                 'mode':'prepared','checkout_hooks':'completed' if run_hooks else 'pending',
                 'lifecycle':spec['lifecycle'],'attempt':str(attempt),
-                'hook_sha256':digest(hook) if run_hooks and hook.is_file() else (previous or {}).get('hook_sha256')}
+                'hook_sha256':digest(hook) if run_hooks and spec['hooks'] and hook.is_file() else (previous or {}).get('hook_sha256')}
             write_json(state/'active.json',result)
             (state/'pending.json').rename(attempt/'activated.json')
             return result
@@ -394,29 +421,35 @@ def restore(handle, checkout, state, run_hooks=False):
             raise
 
 
-def stock_configuration(spec, checkout, owned):
-    for rel in spec['configuration']:
-        name = Path(rel).name
-        if name not in {'package.json','pnpm-lock.yaml'}:
-            q = safe_destination(checkout,rel)
-            require(q.is_file() and digest(q) == spec['inputs'][rel], 'pnpm configuration removed/changed: '+rel)
-    for rel in inventory(checkout,omit=tuple(owned)+('.git',)):
-        name = Path(rel).name
-        if name in {'pnpm-workspace.yaml','.npmrc','pnpmfile.cjs'} or name.startswith('.pnpmfile'):
-            require(rel in spec['inputs'] and digest(safe_destination(checkout,rel)) == spec['inputs'][rel],
-                    'changed/undeclared pnpm configuration is unsupported: '+rel)
+def maintenance_projects(spec, checkout, env):
+    configuration_guard(spec,checkout,env)
+    projects = discover(spec,checkout,env)
+    for rel in configuration_paths(checkout,projects):
+        # Native workspace/manifest/lock edits are mutable. Auth, executable
+        # config and nested workspace contexts still require reviewed bytes.
+        if rel in {'pnpm-workspace.yaml','pnpm-lock.yaml'} or Path(rel).name == 'package.json': continue
+        p = safe_destination(checkout,rel)
+        require(rel in spec['inputs'] and p.is_file() and digest(p) == spec['inputs'][rel],
+                'undeclared/changed auth, executable or nested configuration: '+rel)
+    return projects
 
 
-def stock_hook_context(spec, checkout, env, active):
-    git = checkout/'.git'
-    if not git.exists() and not git.is_symlink(): return None
-    require(git.is_dir() and not git.is_symlink(), 'Git worktree indirection is unsupported')
-    hook = safe_destination(checkout,'.git/hooks/pre-commit')
-    path = subprocess.run([spec['tools']['git'],'config','--local','--get','core.hooksPath'],
-        cwd=checkout,env=env,capture_output=True,text=True,timeout=30)
-    require(path.returncode == 1, 'custom Git hooksPath is unsupported')
-    if hook.exists(): require(hook.is_file() and active.get('hook_sha256') == digest(hook), 'checkout hook changed outside this flow')
-    return hook
+def prepared_drift(spec, checkout, projects):
+    changed = []
+    for rel,sha in spec['inputs'].items():
+        try:
+            p = safe_destination(checkout,rel)
+            same = p.is_file() and digest(p) == sha
+        except (ValueError,OSError): same = False
+        if not same: changed.append(rel)
+    return {'refresh_required':bool(changed) or projects != spec['projects'],
+            'changed_inputs':sorted(changed), 'workspace_projects_changed':projects != spec['projects']}
+
+
+class PnpmCommandError(ValueError):
+    def __init__(self, result):
+        self.result = result
+        super().__init__('native pnpm exited '+str(result['exit_code'])+'; retained logs: '+result['logs'])
 
 
 def stock(checkout,state,args,offline=False):
@@ -431,19 +464,20 @@ def stock(checkout,state,args,offline=False):
         import re
         forbidden = {'storedir','global','globaldir','globalbindir','dir','prefix','virtualstoredir',
             'modulesdir','lockfiledir','enableglobalvirtualstore','packageimportmethod','npmrcauthfile',
-            'pnpmfile','globalpnpmfile','userconfig','globalconfig','managepackagemanagerversions','usenodeversion'}
+            'pnpmfile','globalpnpmfile','userconfig','globalconfig','managepackagemanagerversions','usenodeversion',
+            'config','configdependencies','ignorepnpmfile','allowbuild','workspacepackages'} | {re.sub(r'[^a-z]','',k.lower()) for k in PROTECTED}
         for arg in args:
             key = re.sub(r'[^a-z]','',arg.split('=',1)[0].lower().removeprefix('--config.').removeprefix('--'))
-            require(key not in forbidden and not arg.startswith('-C') and
+            require(key not in forbidden and not (key.startswith('no') and key[2:] in forbidden) and
+                not key.endswith('registry') and not arg.startswith('-C') and
                 (not arg.startswith('-') or arg.startswith('--') or arg in ('-r','-w','-D','-P','-E','-O','-h','-v')),
                 'stock argument overrides private/local scope or uses unsupported compact flags')
         # Installation/configuration of global tools is outside this local command flow.
-        require(not any(x in args for x in ['setup','self-update','env','config','dlx','create','link','deploy']),
+        require(not any(x in args for x in ['setup','self-update','env','config','dlx','create','link','deploy',
+                                         'approve-builds','with','runtime','rt']),
                 'unsupported stock command in local scope')
         env = environment(spec,state,Path(active['store']),offline)
-        stock_configuration(spec,checkout,active['owned'])
-        hook = stock_hook_context(spec,checkout,env,active)
-        projects = discover(spec,checkout,env)
+        projects = maintenance_projects(spec,checkout,env)
         for rel in generated(projects,spec.get('source_owned',[])):
             p = safe_destination(checkout,rel)
             require(not p.exists() or rel in active['owned'], 'unowned dependency directory: '+rel)
@@ -451,15 +485,26 @@ def stock(checkout,state,args,offline=False):
         active['mode'] = 'mutable'; active['checkout_hooks'] = 'not-asserted-after-stock'
         write_json(state/'active.json',active)
         logs = state/'commands'/uuid.uuid4().hex; logs.mkdir(parents=True)
+        native = command([spec['tools']['pnpm'],*args],checkout,env,logs,'pnpm',check=False)
+        sys.stdout.flush(); sys.stderr.flush()
+        sys.stdout.buffer.write(native['stdout']); sys.stderr.buffer.write(native['stderr'])
+        sys.stdout.buffer.flush(); sys.stderr.buffer.flush()
+        warnings = []
         try:
-            text = command([spec['tools']['pnpm'],*args],checkout,env,logs,'pnpm')
-            print(text,end='')
-        finally:
-            stock_configuration(spec,checkout,active['owned'])
-            if hook is not None and hook.exists():
-                safe_destination(checkout,'.git/hooks/pre-commit')
-                require(hook.is_file() and not hook.is_symlink(), 'stock hook effect is not a regular file')
-                active['hook_sha256'] = digest(hook)
-            active['owned'] = sorted(set(active['owned']) | set(generated(discover(spec,checkout,env),spec.get('source_owned',[]))))
+            projects = maintenance_projects(spec,checkout,env)
+            active['owned'] = sorted(set(active['owned']) | set(generated(projects,spec.get('source_owned',[]))))
+        except (ValueError,OSError,subprocess.SubprocessError) as error:
+            # Do not turn a completed native mutation into a wrapper failure.
+            # The same preflight will block the next invocation if necessary.
+            warnings.append('post-command inspection needs review: '+str(error))
+        active['prepared_state'] = prepared_drift(spec,checkout,projects)
+        if warnings: active['prepared_state']['refresh_required'] = True
+        result = {'stock':True,'exit_code':native['exit'],'logs':str(logs),'store':active['store'],
+                  'mode':'mutable','prepared_state':active['prepared_state'],'warnings':warnings}
+        try:
             write_json(state/'active.json',active)
-        return {'stock':True,'logs':str(logs),'store':active['store'],'mode':'mutable'}
+        except OSError as error: warnings.append('state receipt could not be saved: '+str(error))
+        try: write_json(logs/'outcome.json',result)
+        except OSError as error: warnings.append('command receipt could not be saved: '+str(error))
+        if native['exit'] != 0: raise PnpmCommandError(result)
+        return result

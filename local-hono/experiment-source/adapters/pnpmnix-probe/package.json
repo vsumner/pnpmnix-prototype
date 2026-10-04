@@ -1,0 +1,14 @@
+{
+  "name": "@pnpmnix/hono-probe",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "test": "node check.cjs"
+  },
+  "bin": {
+    "hono-probe": "bin.cjs"
+  },
+  "dependencies": {
+    "picocolors": "1.1.1"
+  }
+}

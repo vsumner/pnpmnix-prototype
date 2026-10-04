@@ -123,11 +123,57 @@ let
     archive_map = "${fixtureAcquisition}/archive-map.json";
     patcher = vite.patcher;
   });
+  # Task-local exact Hono revision. Registry inventory is reviewed static data.
+  honoPin = builtins.fromJSON (builtins.readFile ./local-hono/source-pin.json);
+  honoArchive = fetch "hono-source-08a023cb.tar.gz" honoPin.url honoPin.sha512_integrity;
+  honoSource = pkgs.runCommand "pnpmnix-hono-source-08a023cb" { nativeBuildInputs = [ pkgs.gnutar pkgs.gzip ]; } ''
+    mkdir "$out"
+    tar -xzf ${honoArchive} --strip-components=1 -C "$out"
+  '';
+  honoInputs = builtins.fromJSON (builtins.readFile ./local-hono/inputs.json);
+  honoCatalog = builtins.fromJSON (builtins.readFile ./local-hono/catalog.json);
+  honoMapping = builtins.fromJSON (builtins.readFile ./local-hono/groups.json);
+  honoValidMap = builtins.sort builtins.lessThan (builtins.concatLists (builtins.attrValues honoMapping)) == builtins.attrNames honoCatalog &&
+    builtins.all (members: builtins.length members > 0 && builtins.length members <= 64) (builtins.attrValues honoMapping);
+  honoGroups = builtins.mapAttrs (name: members: mk "pnpmnix-hono-archive-group-${name}" ./scripts/group.py {
+    archive_group = builtins.listToAttrs (builtins.map (id: {
+      name = id; value = honoCatalog.${id} // {
+        archive = fetch honoCatalog.${id}.storeName honoCatalog.${id}.originalUrl honoCatalog.${id}.integrity;
+      };
+    }) members);
+  }) honoMapping;
+  honoMembership = builtins.listToAttrs (builtins.concatLists (builtins.map (name:
+    builtins.map (id: { name = id; value = name; }) honoMapping.${name}
+  ) (builtins.attrNames honoMapping)));
+  honoAcquisition = assert honoValidMap; mk "pnpmnix-hono-acquisition" ./scripts/acquire.py {
+    archive_map = builtins.mapAttrs (id: row: {
+      inherit (row) integrity originalUrl name version;
+      archive = "${honoGroups.${honoMembership.${id}}}/${row.storeName}";
+    }) honoCatalog;
+  };
+  honoPrepared = mk "pnpmnix-hono-prepared" ./scripts/prepare-hono.py (common // {
+    source = honoSource; source_hashes = honoInputs;
+    archive_map = "${honoAcquisition}/archive-map.json";
+    trees = ./scripts/trees.py;
+  });
+  honoExperimentSource = pkgs.runCommand "pnpmnix-hono-filtered-experiment-source" {} ''
+    mkdir "$out"
+    cp -R ${honoSource}/. "$out"
+    chmod -R u+w "$out"
+    cp -R ${./local-hono/experiment-source}/. "$out"
+  '';
+  honoExperimentInputs = builtins.fromJSON (builtins.readFile ./local-hono/experiment-inputs.json);
+  honoExperimentPrepared = mk "pnpmnix-hono-filtered-experiment-prepared" ./scripts/prepare-hono.py (common // {
+    source = honoExperimentSource; source_hashes = honoExperimentInputs;
+    archive_map = "${honoAcquisition}/archive-map.json";
+    trees = ./scripts/trees.py;
+  });
   seal = profile: prepared: source: store: inputs: hooks: deferred:
     mk "pnpmnix-environment-${profile}" ./scripts/bundle.py {
       inherit profile prepared source store hooks deferred;
       source_hashes = inputs;
       trees = ./scripts/trees.py;
+      configuration_reader = ./scripts/configuration.py;
       tools = { inherit (common) pnpm node bash; git = "${pkgs.git}/bin/git";
         launcher = "${caller}/bin/node"; only_allow = "${onlyAllow}/bin/only-allow"; };
       npm_prefix = onlyAllow;
@@ -148,6 +194,10 @@ in assert validMap; rec {
   fixtureB = fixture "b" ./tests/fixtures/b;
   fixtureC = fixture "c" ./tests/fixtures/c;
   environments = {
+    hono-experiment = seal "hono-experiment" honoExperimentPrepared honoExperimentSource "${honoExperimentPrepared}/store" honoExperimentInputs []
+      "Exact task-local filtered workspace/picocolors branch. Other runtimes/platforms and general lifecycle remain unqualified.";
+    hono = seal "hono" honoPrepared honoSource "${honoPrepared}/store" honoInputs []
+      "Exact local Hono revision only. Original denied hooks stay denied; default cmd shims qualified on host. Bun/Deno/Fastly/workerd runtime qualification unclaimed.";
     vite = seal "vite" prepared source "${materialized}/store" vite.source_hashes [
       { project = "."; event = "preinstall"; original_body = true; }
       { project = "."; event = "postinstall"; }

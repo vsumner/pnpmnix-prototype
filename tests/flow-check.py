@@ -85,6 +85,48 @@ effective=json.loads(subprocess.check_output([specs['a']['tools']['pnpm'],'confi
 require(effective['storeDir']==active['store'] and effective['packageImportMethod']=='copy' and not effective['enableGlobalVirtualStore'],'private store config not inherited')
 passed('persistent store/data/home config for native child installs')
 
+# Frozen identity is an activation condition, not a maintenance outcome.
+config_path=w/'pnpm-workspace.yaml'; original_config=config_path.read_bytes()
+config=json.loads(original_config); config['minimumReleaseAgeExclude']=['fixture@1.0.0']
+config_path.write_text(json.dumps(config,indent=2)+'\n')
+outcome=pnpm('--version')
+require(outcome['exit_code']==0 and outcome['prepared_state']['refresh_required'] and
+        'pnpm-workspace.yaml' in outcome['prepared_state']['changed_inputs'],'mutable config drift not reported')
+reject('changed frozen configuration still blocks restore',lambda:flow.restore(handles['a'],w,state))
+config['allowBuilds']['esbuild']=False; config_path.write_text(json.dumps(config,indent=2)+'\n')
+reject('changed build decision rejected before maintenance',lambda:pnpm('run','test'))
+config_path.write_bytes(original_config)
+for flag in ['--allow-build=esbuild','--config.dangerouslyAllowAllBuilds=true','--no-strict-dep-builds',
+             '--config','--config.minimum-release-age-strict=false','--trust-policy-ignore-after=0',
+             '--no-verify-store-integrity','--trust-lockfile']:
+ reject('build approval override requires review: '+flag,lambda flag=flag:pnpm('install',flag))
+passed('ordinary configuration drift permits maintenance without changing approved build policy')
+
+try: pnpm('exec','node','--eval','process.stdout.write("native-out\\n");process.stderr.write("native-err\\n");process.exit(23)')
+except flow.PnpmCommandError as error:
+ require(error.result['exit_code']==23,'native failure status masked')
+ logs=Path(error.result['logs'])
+ require((logs/'pnpm.stdout').read_text()=='native-out\n' and (logs/'pnpm.stderr').read_text()=='native-err\n','native streams changed')
+else: raise AssertionError('native failure hidden')
+passed('native nonzero status and separate output streams retained')
+
+native_args=['exec','node','--eval','process.stdout.write(Buffer.from([255,13,10,13]));process.stderr.write(Buffer.from([254,13,10]));process.exit(23)']
+native_env=flow.environment(specs['a'],state,Path(json.loads((state/'active.json').read_text())['store']),True)
+control=subprocess.run([specs['a']['tools']['pnpm'],*native_args],cwd=w,env=native_env,capture_output=True)
+wrapped=subprocess.run([sys.executable,str(ROOT/'pnpmnix.py'),'pnpm','--checkout',str(w),'--state',str(state),'--offline','--',*native_args],capture_output=True)
+require(control.returncode==wrapped.returncode==23 and control.stdout==wrapped.stdout==bytes([255,13,10,13]),'native binary status/stdout differs')
+require(wrapped.stderr.startswith(control.stderr) and control.stderr==bytes([254,13,10]),'native binary stderr differs')
+receipt=json.loads(wrapped.stderr[len(control.stderr):]);require(receipt['exit_code']==23,'native CLI receipt status differs')
+passed('CLI preserves binary/CR/CRLF output bytes and exact native exit')
+
+extra=w/'dist/example/package.json'; extra.parent.mkdir(parents=True); extra.write_text('{"name":"generated-example"}\n')
+inert=w/'dist/.pnpmfile.cjs'; inert.write_text('throw new Error("unconsumed output must not run");\n')
+flow.matching(specs['a'],w,env)
+before_output=inventory(w/'dist')
+flow.restore(handles['a'],w,state)
+require(inventory(w/'dist')==before_output,'non-workspace generated files changed')
+passed('non-workspace generated manifests/config filenames preserved without project exceptions')
+
 before={r:digest(w/r) for r in specs['a']['inputs']}
 reject('cold offline add safely rejects unavailable registry metadata', lambda:pnpm('--filter','@maintenance/app','add','picocolors@1.1.1','--save-exact','--offline'))
 require(before=={r:digest(w/r) for r in before},'failed offline add changed inputs')
@@ -136,8 +178,11 @@ reject('undeclared workspace rejected',lambda:flow.restore(handles['c'],w,state)
 handle=json.loads(Path(handles['c']).read_text());handle['manifest_sha256']='0'*64
 flow.write_json(artifacts/'corrupt-handle.json',handle)
 reject('corrupt prepared manifest identity rejected',lambda:flow.restore(artifacts/'corrupt-handle.json',w,state))
-for flag in ['--store-dir=/tmp/other','--config.storeDir=/tmp/other','--config.packageImportMethod=hardlink','--dir=/tmp','--global']:
+for flag in ['--store-dir=/tmp/other','--config.storeDir=/tmp/other','--config.packageImportMethod=hardlink','--dir=/tmp','--global',
+             '--workspace-packages=../outside','--config.pm-on-fail=ignore','--runtime-on-fail=download']:
  reject('private scope override rejected: '+flag,lambda flag=flag:pnpm(flag,'install'))
+for cmd in ['with','runtime','rt']:
+ reject('unqualified engine management rejected: '+cmd,lambda cmd=cmd:pnpm(cmd,'12.8.1'))
 
 original_copy=flow.copy_private
 for case in ['corrupt','missing','external-link']:
@@ -192,6 +237,19 @@ marker=artifacts/'undeclared-pnpmfile-effect.txt'
 (w/'.pnpmfile.cjs').write_text('require("node:fs").writeFileSync('+json.dumps(str(marker))+',"executed"); module.exports={};')
 reject('pnpmfile rejected before native discovery executes it',lambda:flow.restore(handles['c'],w,state))
 require(not marker.exists(),'undeclared pnpmfile executed before rejection');(w/'.pnpmfile.cjs').unlink()
+nested=w/'packages/app/pnpm-workspace.yaml';nested.write_text('{"pnpmfile":"hooks.cjs"}\n')
+reject('new nested executable workspace context rejected before maintenance',lambda:pnpm('--version'))
+nested.rename(artifacts/'retained-nested-workspace.yaml')
+# Postflight diagnostics may require review, but cannot replace native status.
+for code in [0,29]:
+ body='require("node:fs").writeFileSync(".pnpmfile.cjs",'+json.dumps('require("node:fs").writeFileSync('+json.dumps(str(marker))+',"executed");module.exports={};')+');process.exit('+str(code)+')'
+ try: result=pnpm('exec','node','--eval',body)
+ except flow.PnpmCommandError as error: result=error.result
+ require(result['exit_code']==code and result['warnings'] and result['prepared_state']['refresh_required'],'postflight masked native result')
+ require(not marker.exists(),'postflight executed unreviewed config')
+ reject('postflight config change blocks next preflight '+str(code),lambda:pnpm('--version'))
+ (w/'.pnpmfile.cjs').rename(artifacts/('retained-postflight-'+str(code)+'.cjs'))
+passed('native success/failure survives postflight review warnings without executing changed config')
 saved=state/'saved-hooks';(w/'.git/hooks').rename(saved)
 outside=artifacts/'outside-hooks';outside.mkdir();(w/'.git/hooks').symlink_to(outside)
 reject('external Git hooks symlink rejected before activation',lambda:flow.restore(handles['c'],w,state,True))

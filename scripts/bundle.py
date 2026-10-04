@@ -9,10 +9,19 @@ import sys
 spec = json.loads(Path(sys.argv[1]).read_text())
 m = importlib.util.spec_from_file_location('trees', spec.pop('trees'))
 trees = importlib.util.module_from_spec(m); m.loader.exec_module(trees)
+sys.modules['trees'] = trees
+c = importlib.util.spec_from_file_location('configuration', spec.pop('configuration_reader'))
+configuration = importlib.util.module_from_spec(c); c.loader.exec_module(configuration)
 out = Path(sys.argv[2]); out.mkdir()
 workspace, source, store = Path(spec['prepared'])/'workspace', Path(spec['source']), Path(spec['store'])
 os.environ.update(PNPM_CONFIG_MANAGE_PACKAGE_MANAGER_VERSIONS='false',
-                  PNPM_CONFIG_STORE_DIR=str(store), PNPM_CONFIG_OFFLINE='true')
+                  PNPM_CONFIG_STORE_DIR=str(store), PNPM_CONFIG_OFFLINE='true',
+                  PNPM_CONFIG_SCRIPT_SHELL=spec['tools']['bash'],
+                  PNPM_CONFIG_VERIFY_STORE_INTEGRITY='true',
+                  PNPM_CONFIG_ENABLE_GLOBAL_VIRTUAL_STORE='false')
+protected = configuration.protected_configuration(configuration.native_configuration(spec['tools']['pnpm'],source,os.environ))
+for name in ['.pnpmfile.cjs','.pnpmfile.mjs']:
+    trees.require(not (source/name).exists(), 'project pnpmfile composition is unsupported')
 p = subprocess.run([spec['tools']['pnpm'], '--recursive', 'list', '--depth=-1', '--json'],
                    cwd=workspace, capture_output=True, text=True, check=True)
 projects = sorted({str(Path(x['path']).relative_to(workspace)) for x in json.loads(p.stdout)} | {'.'})
@@ -46,12 +55,12 @@ inputs = spec.pop('source_hashes')
 for rel, sha in inputs.items():
     trees.relative(rel)
     trees.require(trees.digest(source/rel) == sha == trees.digest(workspace/rel), 'input differs: '+rel)
-config_names = {'package.json', 'pnpm-workspace.yaml', '.npmrc', '.pnpmfile.cjs', 'pnpmfile.cjs', 'pnpm-lock.yaml'}
-configuration = sorted(rel for rel in trees.inventory(source) if Path(rel).name in config_names or Path(rel).name.startswith('.pnpmfile'))
-for rel in configuration:
+configuration_paths = configuration.configuration_paths(source,projects)
+for rel in configuration_paths:
     trees.require(rel in inputs, 'configuration missing from explicit preparation inputs: '+rel)
-spec.update(schema=1, platform='aarch64-darwin', pnpm_version='12.6.0', node_version='24.18.0',
-            projects=projects, generated=generated, source_owned=source_owned, inputs=inputs, configuration=configuration,
+spec.update(schema=2, platform='aarch64-darwin', pnpm_version='12.6.0', node_version='24.18.0',
+            projects=projects, generated=generated, source_owned=source_owned, inputs=inputs,
+            configuration=configuration_paths, protected_configuration=protected,
             workspace_inventory=workspace_inventory, store_inventory=store_inventory, payload_changes=payload_changes,
             tool_hashes={k: trees.digest(v) for k,v in spec['tools'].items()},
             lifecycle={'dependency_builds':'approved hooks executed in Nix preparation; denied/deferred work remains pending',
