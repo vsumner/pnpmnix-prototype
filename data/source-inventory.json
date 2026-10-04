@@ -1,0 +1,479 @@
+{
+  "lock_sha256": "ee7521f2290672af6a38c7a906a5356d8b1125288e320067f64c6abdd9a28377",
+  "registry": "https://registry.npmjs.org/",
+  "documents": [
+    {
+      "doc": 0,
+      "packages": 15,
+      "registry": 15,
+      "directory": 0,
+      "importers": 1,
+      "snapshots": 15
+    },
+    {
+      "doc": 1,
+      "packages": 1398,
+      "registry": 1286,
+      "directory": 112,
+      "importers": 285,
+      "snapshots": 1400
+    }
+  ],
+  "registry_archives": 1301,
+  "directories": {
+    "@vitejs/longfilename-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@file:playground/optimize-deps/longfilename": "playground/optimize-deps/longfilename",
+    "@vitejs/require@file:playground/json/dep-json-require": "playground/json/dep-json-require",
+    "@vitejs/test-added-in-entries@file:playground/optimize-deps/added-in-entries": "playground/optimize-deps/added-in-entries",
+    "@vitejs/test-alias-original@file:playground/ssr-alias/alias-original": "playground/ssr-alias/alias-original",
+    "@vitejs/test-aliased-module@file:playground/alias/dir/module": "playground/alias/dir/module",
+    "@vitejs/test-browser-exports@file:playground/ssr-webworker/browser-exports": "playground/ssr-webworker/browser-exports",
+    "@vitejs/test-commonjs-dep@file:playground/define/commonjs-dep": "playground/define/commonjs-dep",
+    "@vitejs/test-css-js-dep@file:playground/css/css-js-dep": "playground/css/css-js-dep",
+    "@vitejs/test-css-lib@file:playground/ssr-deps/css-lib": "playground/ssr-deps/css-lib",
+    "@vitejs/test-css-proxy-dep-nested@file:playground/css/css-proxy-dep-nested": "playground/css/css-proxy-dep-nested",
+    "@vitejs/test-css-proxy-dep@file:playground/css/css-proxy-dep": "playground/css/css-proxy-dep",
+    "@vitejs/test-deep-import@file:playground/ssr-resolve/deep-import": "playground/ssr-resolve/deep-import",
+    "@vitejs/test-define-properties-exports@file:playground/ssr-deps/define-properties-exports": "playground/ssr-deps/define-properties-exports",
+    "@vitejs/test-define-property-exports@file:playground/ssr-deps/define-property-exports": "playground/ssr-deps/define-property-exports",
+    "@vitejs/test-dep-a@file:playground/preload/dep-a": "playground/preload/dep-a",
+    "@vitejs/test-dep-alias-using-absolute-path@file:playground/optimize-deps/dep-alias-using-absolute-path": "playground/optimize-deps/dep-alias-using-absolute-path",
+    "@vitejs/test-dep-browser-false@file:playground/optimize-deps/dep-browser-false": "playground/optimize-deps/dep-browser-false",
+    "@vitejs/test-dep-cjs-browser-field-bare@file:playground/optimize-deps/dep-cjs-browser-field-bare": "playground/optimize-deps/dep-cjs-browser-field-bare",
+    "@vitejs/test-dep-cjs-browser-field@file:playground/optimize-deps/dep-cjs-browser-field": "playground/optimize-deps/dep-cjs-browser-field",
+    "@vitejs/test-dep-cjs-compiled-from-cjs@file:playground/optimize-deps/dep-cjs-compiled-from-cjs": "playground/optimize-deps/dep-cjs-compiled-from-cjs",
+    "@vitejs/test-dep-cjs-compiled-from-esm@file:playground/optimize-deps/dep-cjs-compiled-from-esm": "playground/optimize-deps/dep-cjs-compiled-from-esm",
+    "@vitejs/test-dep-cjs-css-main-field@file:playground/optimize-deps/dep-cjs-css-main-field": "playground/optimize-deps/dep-cjs-css-main-field",
+    "@vitejs/test-dep-cjs-external-package-omit-js-suffix@file:playground/optimize-deps/dep-cjs-external-package-omit-js-suffix": "playground/optimize-deps/dep-cjs-external-package-omit-js-suffix",
+    "@vitejs/test-dep-cjs-for-injected-import@file:playground/optimize-deps/dep-cjs-for-injected-import": "playground/optimize-deps/dep-cjs-for-injected-import",
+    "@vitejs/test-dep-cjs-require-css-main-field@file:playground/optimize-deps/dep-cjs-require-css-main-field": "playground/optimize-deps/dep-cjs-require-css-main-field",
+    "@vitejs/test-dep-cjs-with-assets@file:playground/optimize-deps/dep-cjs-with-assets": "playground/optimize-deps/dep-cjs-with-assets",
+    "@vitejs/test-dep-cjs-with-es-module-flag@file:playground/optimize-deps/dep-cjs-with-es-module-flag": "playground/optimize-deps/dep-cjs-with-es-module-flag",
+    "@vitejs/test-dep-cjs-with-external-deps@file:playground/optimize-deps/dep-cjs-with-external-deps": "playground/optimize-deps/dep-cjs-with-external-deps",
+    "@vitejs/test-dep-conditions@file:packages/vite/src/node/__tests__/fixtures/test-dep-conditions": "packages/vite/src/node/__tests__/fixtures/test-dep-conditions",
+    "@vitejs/test-dep-css-require@file:playground/optimize-deps/dep-css-require": "playground/optimize-deps/dep-css-require",
+    "@vitejs/test-dep-esbuild-plugin-transform@file:playground/optimize-deps/dep-esbuild-plugin-transform": "playground/optimize-deps/dep-esbuild-plugin-transform",
+    "@vitejs/test-dep-esm-dummy-node-builtin@file:playground/optimize-deps/dep-esm-dummy-node-builtin": "playground/optimize-deps/dep-esm-dummy-node-builtin",
+    "@vitejs/test-dep-esm-external@file:playground/optimize-deps/dep-esm-external": "playground/optimize-deps/dep-esm-external",
+    "@vitejs/test-dep-including-a@file:playground/preload/dep-including-a": "playground/preload/dep-including-a",
+    "@vitejs/test-dep-incompatible@file:playground/optimize-deps/dep-incompatible": "playground/optimize-deps/dep-incompatible",
+    "@vitejs/test-dep-licence-cc0@file:packages/vite/src/node/__tests__/plugins/fixtures/license/dep-licence-cc0": "packages/vite/src/node/__tests__/plugins/fixtures/license/dep-licence-cc0",
+    "@vitejs/test-dep-license-mit@file:packages/vite/src/node/__tests__/plugins/fixtures/license/dep-license-mit": "packages/vite/src/node/__tests__/plugins/fixtures/license/dep-license-mit",
+    "@vitejs/test-dep-license-type-marker@file:packages/vite/src/node/__tests__/plugins/fixtures/license/dep-license-type-marker": "packages/vite/src/node/__tests__/plugins/fixtures/license/dep-license-type-marker",
+    "@vitejs/test-dep-lodash-es@file:playground/optimize-deps/dep-lodash-es": "playground/optimize-deps/dep-lodash-es",
+    "@vitejs/test-dep-lodash.clonedeep@file:playground/optimize-deps/dep-lodash-clonedeep": "playground/optimize-deps/dep-lodash-clonedeep",
+    "@vitejs/test-dep-lodash@file:playground/optimize-deps/dep-lodash": "playground/optimize-deps/dep-lodash",
+    "@vitejs/test-dep-malicious-sourcemap@file:playground/js-sourcemap/dep-malicious-sourcemap": "playground/js-sourcemap/dep-malicious-sourcemap",
+    "@vitejs/test-dep-nested-license-isc@file:packages/vite/src/node/__tests__/plugins/fixtures/license/dep-nested-license-isc": "packages/vite/src/node/__tests__/plugins/fixtures/license/dep-nested-license-isc",
+    "@vitejs/test-dep-no-discovery@file:playground/optimize-deps-no-discovery/dep-no-discovery": "playground/optimize-deps-no-discovery/dep-no-discovery",
+    "@vitejs/test-dep-node-env@file:playground/optimize-deps/dep-node-env": "playground/optimize-deps/dep-node-env",
+    "@vitejs/test-dep-non-optimized@file:playground/optimize-deps/dep-non-optimized": "playground/optimize-deps/dep-non-optimized",
+    "@vitejs/test-dep-not-js@file:playground/optimize-deps/dep-not-js": "playground/optimize-deps/dep-not-js",
+    "@vitejs/test-dep-optimize-exports-with-glob@file:playground/optimize-deps/dep-optimize-exports-with-glob": "playground/optimize-deps/dep-optimize-exports-with-glob",
+    "@vitejs/test-dep-optimize-exports-with-root-glob@file:playground/optimize-deps/dep-optimize-exports-with-root-glob": "playground/optimize-deps/dep-optimize-exports-with-root-glob",
+    "@vitejs/test-dep-optimize-with-glob@file:playground/optimize-deps/dep-optimize-with-glob": "playground/optimize-deps/dep-optimize-with-glob",
+    "@vitejs/test-dep-optimized-malicious@file:playground/js-sourcemap/dep-optimized-malicious": "playground/js-sourcemap/dep-optimized-malicious",
+    "@vitejs/test-dep-relative-to-main@file:playground/optimize-deps/dep-relative-to-main": "playground/optimize-deps/dep-relative-to-main",
+    "@vitejs/test-dep-self-reference-url-worker@file:playground/worker/dep-self-reference-url-worker": "playground/worker/dep-self-reference-url-worker",
+    "@vitejs/test-dep-source-map-no-sources@file:playground/optimize-deps/dep-source-map-no-sources": "playground/optimize-deps/dep-source-map-no-sources",
+    "@vitejs/test-dep-that-imports@file:playground/external/dep-that-imports": "playground/external/dep-that-imports",
+    "@vitejs/test-dep-that-requires@file:playground/external/dep-that-requires": "playground/external/dep-that-requires",
+    "@vitejs/test-dep-to-optimize@file:playground/worker/dep-to-optimize": "playground/worker/dep-to-optimize",
+    "@vitejs/test-dep-with-asset-ext1.pdf@file:playground/optimize-deps/dep-with-asset-ext/dep1": "playground/optimize-deps/dep-with-asset-ext/dep1",
+    "@vitejs/test-dep-with-asset-ext2.pdf@file:playground/optimize-deps/dep-with-asset-ext/dep2": "playground/optimize-deps/dep-with-asset-ext/dep2",
+    "@vitejs/test-dep-with-assets@file:playground/optimize-deps/dep-with-assets": "playground/optimize-deps/dep-with-assets",
+    "@vitejs/test-dep-with-builtin-module-cjs@file:playground/optimize-deps/dep-with-builtin-module-cjs": "playground/optimize-deps/dep-with-builtin-module-cjs",
+    "@vitejs/test-dep-with-builtin-module-esm@file:playground/optimize-deps/dep-with-builtin-module-esm": "playground/optimize-deps/dep-with-builtin-module-esm",
+    "@vitejs/test-dep-with-dynamic-import@file:playground/optimize-deps/dep-with-dynamic-import": "playground/optimize-deps/dep-with-dynamic-import",
+    "@vitejs/test-dep-with-excluded-optional-peer-dep-cjs@file:playground/optimize-deps/dep-with-excluded-optional-peer-dep-cjs": "playground/optimize-deps/dep-with-excluded-optional-peer-dep-cjs",
+    "@vitejs/test-dep-with-injected-import@file:playground/optimize-deps/dep-with-injected-import": "playground/optimize-deps/dep-with-injected-import",
+    "@vitejs/test-dep-with-optional-peer-dep-cjs@file:playground/optimize-deps/dep-with-optional-peer-dep-cjs": "playground/optimize-deps/dep-with-optional-peer-dep-cjs",
+    "@vitejs/test-dep-with-optional-peer-dep-submodule@file:playground/optimize-deps/dep-with-optional-peer-dep-submodule": "playground/optimize-deps/dep-with-optional-peer-dep-submodule",
+    "@vitejs/test-dep-with-optional-peer-dep@file:playground/optimize-deps/dep-with-optional-peer-dep": "playground/optimize-deps/dep-with-optional-peer-dep",
+    "@vitejs/test-dep-with-plus-subpath@file:playground/optimize-deps/dep-with-plus-subpath": "playground/optimize-deps/dep-with-plus-subpath",
+    "@vitejs/test-entries@file:playground/ssr-resolve/entries": "playground/ssr-resolve/entries",
+    "@vitejs/test-external-cjs@file:playground/ssr-noexternal/external-cjs": "playground/ssr-noexternal/external-cjs",
+    "@vitejs/test-external-entry@file:playground/ssr-deps/external-entry": "playground/ssr-deps/external-entry",
+    "@vitejs/test-external-using-external-entry@file:playground/ssr-deps/external-using-external-entry": "playground/ssr-deps/external-using-external-entry",
+    "@vitejs/test-forward-console-throw-dep@file:playground/forward-console/fixtures/throw-dep": "playground/forward-console/fixtures/throw-dep",
+    "@vitejs/test-forwarded-export@file:playground/ssr-deps/forwarded-export": "playground/ssr-deps/forwarded-export",
+    "@vitejs/test-import-attribute-dep@file:playground/import-attribute/import-attribute-dep": "playground/import-attribute/import-attribute-dep",
+    "@vitejs/test-import-builtin@file:playground/ssr-deps/import-builtin-cjs": "playground/ssr-deps/import-builtin-cjs",
+    "@vitejs/test-import-meta-glob-pkg@file:playground/glob-import/root/import-meta-glob-pkg": "playground/glob-import/root/import-meta-glob-pkg",
+    "@vitejs/test-importee-pkg@file:playground/js-sourcemap/importee-pkg": "playground/js-sourcemap/importee-pkg",
+    "@vitejs/test-json-module@file:playground/json/json-module": "playground/json/json-module",
+    "@vitejs/test-minify@file:playground/minify/dir/module": "playground/minify/dir/module",
+    "@vitejs/test-missing-dep@file:playground/optimize-missing-deps/missing-dep": "playground/optimize-missing-deps/missing-dep",
+    "@vitejs/test-module-condition@file:playground/ssr-deps/module-condition": "playground/ssr-deps/module-condition",
+    "@vitejs/test-module-sync@file:playground/ssr-resolve/pkg-module-sync": "playground/ssr-resolve/pkg-module-sync",
+    "@vitejs/test-multi-entry-dep@file:playground/optimize-missing-deps/multi-entry-dep": "playground/optimize-missing-deps/multi-entry-dep",
+    "@vitejs/test-nested-exclude@file:playground/optimize-deps/nested-exclude": "playground/optimize-deps/nested-exclude",
+    "@vitejs/test-nested-exclude@file:playground/ssr-deps/nested-exclude": "playground/ssr-deps/nested-exclude",
+    "@vitejs/test-nested-external-cjs@file:playground/ssr-deps/nested-external-cjs": "playground/ssr-deps/nested-external-cjs",
+    "@vitejs/test-nested-external@file:playground/ssr-deps/nested-external": "playground/ssr-deps/nested-external",
+    "@vitejs/test-nested-include@file:playground/optimize-deps/nested-include": "playground/optimize-deps/nested-include",
+    "@vitejs/test-nested-include@file:playground/ssr-deps/nested-include": "playground/ssr-deps/nested-include",
+    "@vitejs/test-no-external-cjs@file:playground/ssr-deps/no-external-cjs": "playground/ssr-deps/no-external-cjs",
+    "@vitejs/test-no-external-css@file:playground/ssr-deps/no-external-css": "playground/ssr-deps/no-external-css",
+    "@vitejs/test-object-assigned-exports@file:playground/ssr-deps/object-assigned-exports": "playground/ssr-deps/object-assigned-exports",
+    "@vitejs/test-only-object-assigned-exports@file:playground/ssr-deps/only-object-assigned-exports": "playground/ssr-deps/only-object-assigned-exports",
+    "@vitejs/test-optimized-with-nested-external@file:playground/ssr-deps/optimized-with-nested-external": "playground/ssr-deps/optimized-with-nested-external",
+    "@vitejs/test-pkg-exports@file:playground/ssr-deps/pkg-exports": "playground/ssr-deps/pkg-exports",
+    "@vitejs/test-pkg@file:playground/dynamic-import/pkg": "playground/dynamic-import/pkg",
+    "@vitejs/test-primitive-export@file:playground/ssr-deps/primitive-export": "playground/ssr-deps/primitive-export",
+    "@vitejs/test-read-file-content@file:playground/ssr-deps/read-file-content": "playground/ssr-deps/read-file-content",
+    "@vitejs/test-require-absolute@file:playground/ssr-deps/require-absolute": "playground/ssr-deps/require-absolute",
+    "@vitejs/test-require-external-cjs@file:playground/ssr-noexternal/require-external-cjs": "playground/ssr-noexternal/require-external-cjs",
+    "@vitejs/test-resolve-pkg-exports@file:playground/ssr-resolve/pkg-exports": "playground/ssr-resolve/pkg-exports",
+    "@vitejs/test-resolve-sharp-dir-nested@file:playground/resolve/sharp-dir-nested": "playground/resolve/sharp-dir-nested",
+    "@vitejs/test-scss-proxy-dep-nested@file:playground/css/scss-proxy-dep-nested": "playground/css/scss-proxy-dep-nested",
+    "@vitejs/test-scss-proxy-dep@file:playground/css/scss-proxy-dep": "playground/css/scss-proxy-dep",
+    "@vitejs/test-ssr-conditions-external@file:playground/ssr-conditions/external": "playground/ssr-conditions/external",
+    "@vitejs/test-ssr-conditions-no-external@file:playground/ssr-conditions/no-external": "playground/ssr-conditions/no-external",
+    "@vitejs/test-ts-transpiled-exports@file:playground/ssr-deps/ts-transpiled-exports": "playground/ssr-deps/ts-transpiled-exports",
+    "@vitejs/test-worker-dep-cjs@file:playground/worker/dep-cjs": "playground/worker/dep-cjs",
+    "@vitejs/test-worker-exports@file:playground/ssr-webworker/worker-exports": "playground/ssr-webworker/worker-exports",
+    "test-dep-invalid-exports@file:packages/vite/src/node/ssr/runtime/__tests__/fixtures/invalid-package/deps/test-dep-invalid-exports": "packages/vite/src/node/ssr/runtime/__tests__/fixtures/invalid-package/deps/test-dep-invalid-exports"
+  },
+  "links": [
+    {
+      "doc": 1,
+      "importer": ".",
+      "name": "vite",
+      "target": "packages/vite"
+    },
+    {
+      "doc": 1,
+      "importer": "packages/plugin-legacy",
+      "name": "vite",
+      "target": "packages/vite"
+    },
+    {
+      "doc": 1,
+      "importer": "packages/vite/src/node/__tests__",
+      "name": "@vitejs/cjs-ssr-dep",
+      "target": "packages/vite/src/node/__tests__/fixtures/cjs-ssr-dep"
+    },
+    {
+      "doc": 1,
+      "importer": "packages/vite/src/node/__tests__",
+      "name": "@vitejs/parent",
+      "target": "packages/vite/src/node/__tests__/packages/parent"
+    },
+    {
+      "doc": 1,
+      "importer": "packages/vite/src/node/__tests__/fixtures/config/entry",
+      "name": "@vite/test-config-plugin-module-condition",
+      "target": "packages/vite/src/node/__tests__/fixtures/config/plugin-module-condition"
+    },
+    {
+      "doc": 1,
+      "importer": "packages/vite/src/node/__tests__/packages/parent",
+      "name": "@vitejs/child",
+      "target": "packages/vite/src/node/__tests__/packages/child"
+    },
+    {
+      "doc": 1,
+      "importer": "packages/vite/src/node/ssr/runtime/__tests__",
+      "name": "@vitejs/cjs-external",
+      "target": "packages/vite/src/node/ssr/runtime/__tests__/fixtures/cjs-external"
+    },
+    {
+      "doc": 1,
+      "importer": "packages/vite/src/node/ssr/runtime/__tests__",
+      "name": "@vitejs/esm-external",
+      "target": "packages/vite/src/node/ssr/runtime/__tests__/fixtures/esm-external"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/alias",
+      "name": "@vitejs/test-resolve-linked",
+      "target": "playground/resolve-linked"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/css",
+      "name": "@vitejs/test-css-dep",
+      "target": "playground/css/css-dep"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/css",
+      "name": "@vitejs/test-css-dep-exports",
+      "target": "playground/css/css-dep-exports"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/devtools",
+      "name": "vite",
+      "target": "packages/vite"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/external",
+      "name": "vite",
+      "target": "packages/vite"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/legacy",
+      "name": "@vitejs/plugin-legacy",
+      "target": "packages/plugin-legacy"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/legacy",
+      "name": "vite",
+      "target": "packages/vite"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/nested-deps",
+      "name": "@vitejs/self-referencing",
+      "target": "playground/nested-deps/self-referencing"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/nested-deps",
+      "name": "@vitejs/test-package-a",
+      "target": "playground/nested-deps/test-package-a"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/nested-deps",
+      "name": "@vitejs/test-package-b",
+      "target": "playground/nested-deps/test-package-b"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/nested-deps",
+      "name": "@vitejs/test-package-c",
+      "target": "playground/nested-deps/test-package-c"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/nested-deps",
+      "name": "@vitejs/test-package-d",
+      "target": "playground/nested-deps/test-package-d"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/nested-deps",
+      "name": "@vitejs/test-package-e",
+      "target": "playground/nested-deps/test-package-e"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/nested-deps",
+      "name": "@vitejs/test-package-f",
+      "target": "playground/nested-deps/test-package-f"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/nested-deps/test-package-d",
+      "name": "@vitejs/test-package-d-nested",
+      "target": "playground/nested-deps/test-package-d/test-package-d-nested"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/nested-deps/test-package-e",
+      "name": "@vitejs/test-package-e-excluded",
+      "target": "playground/nested-deps/test-package-e/test-package-e-excluded"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/nested-deps/test-package-e",
+      "name": "@vitejs/test-package-e-included",
+      "target": "playground/nested-deps/test-package-e/test-package-e-included"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/nested-deps/test-package-e/test-package-e-included",
+      "name": "@vitejs/test-package-e-excluded",
+      "target": "playground/nested-deps/test-package-e/test-package-e-excluded"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/optimize-deps",
+      "name": "@vitejs/test-dep-linked",
+      "target": "playground/optimize-deps/dep-linked"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/optimize-deps",
+      "name": "@vitejs/test-dep-linked-include",
+      "target": "playground/optimize-deps/dep-linked-include"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/optimize-deps",
+      "name": "@vitejs/test-resolve-linked",
+      "target": "playground/resolve-linked"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/preserve-symlinks",
+      "name": "@vitejs/test-module-a",
+      "target": "playground/preserve-symlinks/module-a"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/resolve",
+      "name": "@vitejs/test-resolve-browser-field",
+      "target": "playground/resolve/browser-field"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/resolve",
+      "name": "@vitejs/test-resolve-browser-module-field1",
+      "target": "playground/resolve/browser-module-field1"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/resolve",
+      "name": "@vitejs/test-resolve-custom-browser-main-field",
+      "target": "playground/resolve/custom-browser-main-field"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/resolve",
+      "name": "@vitejs/test-resolve-custom-condition",
+      "target": "playground/resolve/custom-condition"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/resolve",
+      "name": "@vitejs/test-resolve-custom-main-field",
+      "target": "playground/resolve/custom-main-field"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/resolve",
+      "name": "@vitejs/test-resolve-exports-and-nested-scope",
+      "target": "playground/resolve/exports-and-nested-scope"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/resolve",
+      "name": "@vitejs/test-resolve-exports-env",
+      "target": "playground/resolve/exports-env"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/resolve",
+      "name": "@vitejs/test-resolve-exports-from-root",
+      "target": "playground/resolve/exports-from-root"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/resolve",
+      "name": "@vitejs/test-resolve-exports-legacy-fallback",
+      "target": "playground/resolve/exports-legacy-fallback"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/resolve",
+      "name": "@vitejs/test-resolve-exports-path",
+      "target": "playground/resolve/exports-path"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/resolve",
+      "name": "@vitejs/test-resolve-exports-with-module",
+      "target": "playground/resolve/exports-with-module"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/resolve",
+      "name": "@vitejs/test-resolve-exports-with-module-condition",
+      "target": "playground/resolve/exports-with-module-condition"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/resolve",
+      "name": "@vitejs/test-resolve-exports-with-module-condition-required",
+      "target": "playground/resolve/exports-with-module-condition-required"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/resolve",
+      "name": "@vitejs/test-resolve-imports-pkg",
+      "target": "playground/resolve/imports-path/other-pkg"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/resolve",
+      "name": "@vitejs/test-resolve-linked",
+      "target": "playground/resolve-linked"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/resolve",
+      "name": "@vitejs/test-resolve-sharp-dir",
+      "target": "playground/resolve/sharp-dir"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/resolve",
+      "name": "@vitejs/test-resolve-side-effects-glob",
+      "target": "playground/resolve/side-effects-glob"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/resolve",
+      "name": "@vitejs/test-utf8-bom-package",
+      "target": "playground/resolve/utf8-bom-package"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/resolve/browser-field",
+      "name": "@vitejs/test-resolve-browser-field-bare-import-fail",
+      "target": "playground/resolve/browser-field-bare-import-fail"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/resolve/browser-field",
+      "name": "@vitejs/test-resolve-browser-field-bare-import-success",
+      "target": "playground/resolve/browser-field-bare-import-success"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/resolve/exports-with-module-condition-required",
+      "name": "@vitejs/test-resolve-exports-with-module-condition",
+      "target": "playground/resolve/exports-with-module-condition"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/ssr-deps",
+      "name": "@vitejs/test-linked-no-external",
+      "target": "playground/ssr-deps/linked-no-external"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/ssr-deps",
+      "name": "@vitejs/test-non-optimized-with-nested-external",
+      "target": "playground/ssr-deps/non-optimized-with-nested-external"
+    },
+    {
+      "doc": 1,
+      "importer": "playground/ssr-webworker",
+      "name": "@vitejs/test-resolve-linked",
+      "target": "playground/resolve-linked"
+    }
+  ],
+  "unsupported": [],
+  "strategy": "fetch every registry record across both lock documents; stock pnpm selects platforms/optionals and handles peers/patches/directories/workspaces",
+  "support": [
+    "public npm registry with exact SHA512 and ordinary version",
+    "captured local directory",
+    "captured workspace/link"
+  ],
+  "refuse": [
+    "git",
+    "arbitrary URL tarball",
+    "revision/integrity-addressed registry",
+    "named/private registry/auth",
+    "binary/variations/custom resolution",
+    "unverified archive",
+    "external directory/link"
+  ]
+}

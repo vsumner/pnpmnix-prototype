@@ -1,0 +1,25 @@
+{
+  "nixpkgs": {
+    "narHash": "sha256-db/8NgfehQlPNt8rMY0J1gvwzTaURU/foM7y/AQimIM=",
+    "rev": "1d4e0f865d68258aada31e68e6d79c8c463f3b34",
+    "url": "https://api.flakehub.com/f/pinned/NixOS/nixpkgs/0.2511.914302%2Brev-1d4e0f865d68258aada31e68e6d79c8c463f3b34/019f1c78-b5ab-7af2-8516-c0d5406b0646/source.tar.gz"
+  },
+  "only-allow": {
+    "sha512_integrity": "sha512-uxyNYDsCh5YIJ780G7hC5OHjVUr9reHsbZNMM80L9tZlTpb3hUzb36KXgW4ZUGtJKQnGA3xegmWg1BxhWV0jJA==",
+    "url": "https://registry.npmjs.org/only-allow/-/only-allow-1.2.2.tgz"
+  },
+  "pnpm": {
+    "sha256": "d109f1b2c56dac94978a6ad7bcdbe18809d1f43980f15ceeaef2875b468c0b78",
+    "sha512_integrity": "sha512-rafpVkjzugKBMxSvGQd5wK1x5eOTkD/+lcJIFHeQhvd+BJ8kDisOOvwhQDrpGd4vd2Fx+hhW0P2Ptt638OlhFg==",
+    "url": "https://registry.npmjs.org/@pnpm/exe.darwin-arm64/-/exe.darwin-arm64-12.6.0.tgz"
+  },
+  "vite": {
+    "sha256": "0b625154643809d824d9ffaead6c13f3d328b41e04dba7a93f291943b4273066",
+    "sha512_integrity": "sha512-drl4zLmFTMBTv5ieUsxGnunWiYVIjDGVC5a2nOZZrEYP09DEOVHgto9N7TYWlAOj/ItnXLN85TR6YHZjWAcfTA==",
+    "url": "https://codeload.github.com/vitejs/vite/tar.gz/10033218d239c927cdc375970b5741cce408e81b"
+  },
+  "which-pm-runs": {
+    "sha512_integrity": "sha512-n1brCuqClxfFfq/Rb0ICg9giSZqCS+pLtccdag6C2HyufBrh3fBOiy9nb6ggRMvWOVH5GrdJskj5iGTZNxd7SA==",
+    "url": "https://registry.npmjs.org/which-pm-runs/-/which-pm-runs-1.1.0.tgz"
+  }
+}
