@@ -2,6 +2,8 @@
 
 A small, frozen example of Nix-owned archive acquisition followed by native pnpm offline materialization, with a local prepare → restore → stock pnpm command flow. Native pnpm owns package-store indexes, dependency graphs, peers, patches, platform selection and linking. This prototype does not implement another package manager.
 
+The separate [ARM64 Linux Hono reuse path](linux-hono/README.md) qualifies only the pinned Hono core flow in an isolated Linux guest. It requires exact pre-acquired public Nix inputs; cold Linux acquisition, frozen experiment B and general Linux/project support remain unqualified. The Darwin commands below retain their existing profiles and guards.
+
 ## Run
 
 From a copy of this source directory:
@@ -37,7 +39,7 @@ python3 pnpmnix.py pnpm --checkout /tmp/pnpmnix-dev --state /tmp/pnpmnix-state \
   -- --filter @maintenance/app add picocolors@1.1.1 --save-exact
 ```
 
-`prepare --profile vite` uses the original frozen Vite inputs and prints its source path. Restore into a writable checkout at the pinned Vite revision listed below, with matching manifests, complete lockfile stream, workspace configuration, patches and declared source/hook inputs. The `fixture-a`, `fixture-b` and `fixture-c` profiles are qualification examples: A has semver 6, B semver 7, and C adds a workspace with a peer, script and bin. These are the preparation inputs accepted by the published CLI. Arbitrary lockfile inventory generation remains unsupported. This isolated validation branch also adds exact task-local `hono` and `hono-experiment` profiles; see [their scope and concrete maintenance limits](local-hono/README.md).
+`prepare --profile vite` uses the original frozen Vite inputs and prints its source path. Restore into a writable checkout at the pinned Vite revision listed below, with matching manifests, complete lockfile stream, workspace configuration, patches and declared source/hook inputs. The `fixture-a`, `fixture-b` and `fixture-c` profiles are qualification examples: A has semver 6, B semver 7, and C adds a workspace with a peer, script and bin. These are the preparation inputs accepted by the published CLI. Arbitrary lockfile inventory generation remains unsupported. The published Darwin flow also includes exact reviewed `hono` and `hono-experiment` profiles; see [their scope and concrete maintenance limits](local-hono/README.md).
 
 Preparation produces an immutable Nix environment and a local `prepared.json` handle. It seals exact dependency/store inventories, explicit input hashes, native project discovery, platform/tool bytes and the checkout hook plan. A changed preparation identity needs a matching reviewed profile; ordinary development edits can continue with stock pnpm without preparing again. Unrelated source files and edits are preserved during restore. A source-owned workspace dependency directory is preserved only when the frozen source and prepared subtree are identical; mixed source/generated directories are rejected.
 
@@ -65,7 +67,7 @@ python3 tests/flow-check.py --artifacts /tmp/pnpmnix-flow-check
 
 ## Requirements and pins
 
-- Apple Silicon macOS (`aarch64-darwin`). Linux, Intel macOS and other machines are untested and rejected by the entry point.
+- Apple Silicon macOS (`aarch64-darwin`). Intel macOS and other machines are rejected by this entry point. The separately scoped Linux Hono entry point has its own [requirements](linux-hono/README.md).
 - An existing Nix 2.35.2 client **and running daemon**. The command checks both; it does not install or update Nix.
 - Bootstrap Python 3.9 or later. Build-time Python, Node, pnpm, Git, compiler and SDK come from declared Nix inputs.
 - More than 12 GiB free on both the output and Nix-store volumes before starting. A polling guard stops the client at 12 GiB, above a 10 GiB reserve. Cold toolchain/dependency acquisition can need additional space; allow several GiB beyond that margin. A polling guard cannot guarantee immediate daemon cancellation.

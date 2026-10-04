@@ -56,3 +56,7 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+## Linux Hono reuse path
+
+The separate Linux adapter contains source code, exact public source/archive/NAR identities and a pathless qualification summary. Its required public Nix inputs and tools are acquired/imported separately; no archive, executable, package store, OS image or source checkout is distributed here. Existing Hono, pnpm, Node and Nixpkgs license boundaries above also apply. The public Nix store identities are immutable input references, not personal filesystem paths.

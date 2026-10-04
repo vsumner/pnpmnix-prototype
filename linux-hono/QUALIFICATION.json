@@ -1,0 +1,64 @@
+{
+  "schema": 1,
+  "profile": "hono",
+  "platform": "aarch64-linux",
+  "qualification_date": "2026-10-04",
+  "source_commit": "08a023cbfde55b434fb0fb30fae35d42e4bf20aa",
+  "lock_sha256": "3bbe772c131585b3e138d0a48b7f229069c1533dc63225629beb3039a5fcac86",
+  "prototype_base": "5d6d1edb2c83118bc3cd34c1c5d3ea5170d58bf6",
+  "toolchain": {
+    "pnpm": "12.6.0",
+    "Node": "24.18.0",
+    "Nix_client_daemon": "2.35.2",
+    "Python": "3.13.12"
+  },
+  "core_flow": "stock baseline; prepare; fresh restore; paired workspace/registry/root-bin additions; original-source branch return and restore",
+  "root_test_runs": 5,
+  "root_tests_each": {
+    "pass": 5196,
+    "skip": 44,
+    "files": 145
+  },
+  "service_worker_runs": 5,
+  "service_worker_tests_each": 5,
+  "archives": 1085,
+  "raw_archive_bytes": 2154674089,
+  "root_shims_identical": 17,
+  "cross_scope_regular_files": 201553,
+  "cross_scope_shared_inodes": 0,
+  "negative_controls": [
+    "changed-lockfile",
+    "undeclared-executable-config",
+    "private-store-override",
+    "unreviewed-profile",
+    "corrupt-handle",
+    "changed-private-payload-after-linking"
+  ],
+  "retained_pairs": 4,
+  "stock_baseline_reused_for_native_control": true,
+  "pending_build_ids_after_return": 7,
+  "stock_native_pending_build_ids": 0,
+  "independent_review": "GPT-6.1 Sol: PASS for the exact core scope",
+  "tested_adapter_patch_sha256": "520991f0d54cc248288dfe163b896dac858330e289bef42133b6264c771c7d9a",
+  "evidence_kind": "summary of retained original qualification, not a clean-host or cold-Linux-acquisition run",
+  "unqualified": [
+    "generic/Linux support",
+    "x86_64 or another project/OS/toolchain",
+    "frozen experiment B preparation/restoration",
+    "all Hono external runtime suites",
+    "lifecycle metadata parity/performance",
+    "hard disk quota or proven remote Nix daemon cancellation"
+  ],
+  "publication_integration_checks": {
+    "Darwin_runtime_build_test_bytes_unchanged": true,
+    "Darwin_six_environment_smoke_consumer_identities_unchanged": true,
+    "Linux_acquisition_prepared_bundle_all_tool_identities_unchanged": true,
+    "cached_public_namespace_prepare_passed": true,
+    "public_input_NAR_metadata_verified": 28,
+    "bounded_live_namespace_gates_passed": 6,
+    "service_worker_tests_passed": 5,
+    "new_build_or_dependency_pair": false,
+    "full_core_experiment_repeated": false,
+    "source_privacy_license_syntax_whitespace_passed": true
+  }
+}

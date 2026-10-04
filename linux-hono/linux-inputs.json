@@ -1,0 +1,178 @@
+{
+  "source_commit": "08a023cbfde55b434fb0fb30fae35d42e4bf20aa",
+  "nixpkgs_source": "/nix/store/31schrd6pyypm6cgzdw00flh0i8q1yvi-source",
+  "nixpkgs_nar_hash": "sha256-db/8NgfehQlPNt8rMY0J1gvwzTaURU/foM7y/AQimIM=",
+  "hono_source": "/nix/store/dbkmsq57ry5idgqz71vf3z87yz7f7g7b-pnpmnix-hono-source-08a023cb",
+  "groups": {
+    "b5-8": "/nix/store/0blpr1jxr41ihq1bmn9b7g6rj0vm4z9i-pnpmnix-hono-archive-group-b5-8",
+    "b5-13": "/nix/store/12fhn307my7p85nl97zkpdl111i0p453-pnpmnix-hono-archive-group-b5-13",
+    "b5-7": "/nix/store/19s7gckz4qw0m877qbblz6bdl501cxpv-pnpmnix-hono-archive-group-b5-7",
+    "b5-b": "/nix/store/35vl1f2z1c5d2wvlx6746jqjklb215x8-pnpmnix-hono-archive-group-b5-b",
+    "b4-8": "/nix/store/3bh76plad7312f1wszkb3a63pq40wg1r-pnpmnix-hono-archive-group-b4-8",
+    "b4-d": "/nix/store/3d8fq1qhxwc2n079zyg8dg7fniqbwrap-pnpmnix-hono-archive-group-b4-d",
+    "b5-14": "/nix/store/3hk8njc1qb2ddcjhycpmkdj2ly32jblz-pnpmnix-hono-archive-group-b5-14",
+    "b4-c": "/nix/store/4v9g7c67j700740vmyqpqfb2lax85642-pnpmnix-hono-archive-group-b4-c",
+    "b4-6": "/nix/store/4vh23ghzpmmfr5qss2i4c49x3673d3vi-pnpmnix-hono-archive-group-b4-6",
+    "b4-2": "/nix/store/5r3iyligvs3jxqn2s0jv4zf99v5cw6kj-pnpmnix-hono-archive-group-b4-2",
+    "b5-17": "/nix/store/6zvmzkcg8sz2n5iw7fgxwijsw1l8xpdh-pnpmnix-hono-archive-group-b5-17",
+    "b5-1f": "/nix/store/70lbqiq01h8q344v3jxxfldi1ynvs3jx-pnpmnix-hono-archive-group-b5-1f",
+    "b5-12": "/nix/store/7ajmmjqqkjw1lmwbpk88h59chc9fmkdd-pnpmnix-hono-archive-group-b5-12",
+    "b5-1d": "/nix/store/7xrz17x5ndsf9kfyy4ckgpvjcqfjx2hh-pnpmnix-hono-archive-group-b5-1d",
+    "b5-15": "/nix/store/c6mhpynb4yfa9m6dknbp4h2ph76ny5yq-pnpmnix-hono-archive-group-b5-15",
+    "b5-f": "/nix/store/hi7lp7mxbaq7vy0fkn8bnmjf7msp92qg-pnpmnix-hono-archive-group-b5-f",
+    "b5-3": "/nix/store/hk0gzb9h9b992dsxwdr7cyh50yvjqx63-pnpmnix-hono-archive-group-b5-3",
+    "b4-0": "/nix/store/hpn4vi1041g9iz1xgmrrz6iz3xl5fyn5-pnpmnix-hono-archive-group-b4-0",
+    "b5-a": "/nix/store/jrk97rb8d6p9s8r91aqkkicafzc67bx5-pnpmnix-hono-archive-group-b5-a",
+    "b5-e": "/nix/store/mplg495zk9njpa3rrnwwna8z2ni3jhyd-pnpmnix-hono-archive-group-b5-e",
+    "b5-16": "/nix/store/q4znz2par3dd50b5vnxvrsfnq7wxzb5v-pnpmnix-hono-archive-group-b5-16",
+    "b5-2": "/nix/store/rjzgj262y5dldj53f3jq39zrg2s26fmd-pnpmnix-hono-archive-group-b5-2",
+    "b5-6": "/nix/store/xbx0cwfs96acl7rdjqzm3sagfihxj4bz-pnpmnix-hono-archive-group-b5-6",
+    "b5-9": "/nix/store/zaibg1hfy271w7z8rl2cdlpjwlmrykik-pnpmnix-hono-archive-group-b5-9",
+    "b5-1c": "/nix/store/zj6i3874riz8qvjsd39pza2nzjkay1h7-pnpmnix-hono-archive-group-b5-1c",
+    "b5-1e": "/nix/store/znpc2dpf0582fh3mzc1ma4cc1ps8nwxl-pnpmnix-hono-archive-group-b5-1e"
+  },
+  "pnpm_archive": "/nix/store/rjzgj262y5dldj53f3jq39zrg2s26fmd-pnpmnix-hono-archive-group-b5-2/pnpm-raw-12e036ce2c05--pnpm-exe.linux-arm64-12.6.0.tgz",
+  "pnpm_integrity": "sha512-8h2sNoIhHDpHDYqZZCh9PXr6krqW10btb0GHVGuw710muDHlFAHMtUG2ogmaHge6zJG1xgY4Y7mwX5g/LWvrYg==",
+  "nar_pins": {
+    "/nix/store/0blpr1jxr41ihq1bmn9b7g6rj0vm4z9i-pnpmnix-hono-archive-group-b5-8": {
+      "narHash": "sha256-FyAsP3HgIb+iqEgLXzmr3jsaW6hcN7m9wT7O3R9H2tc=",
+      "narSize": 117405896,
+      "references": []
+    },
+    "/nix/store/12fhn307my7p85nl97zkpdl111i0p453-pnpmnix-hono-archive-group-b5-13": {
+      "narHash": "sha256-SoFJwWCnBarGEo+xiQbxMl9R8PVK1enm9+vFwsK9dAA=",
+      "narSize": 44626728,
+      "references": []
+    },
+    "/nix/store/19s7gckz4qw0m877qbblz6bdl501cxpv-pnpmnix-hono-archive-group-b5-7": {
+      "narHash": "sha256-7FiqtADAGE87NZ0/LexaUcFueSJT5RnzEw57242Z35E=",
+      "narSize": 109673400,
+      "references": []
+    },
+    "/nix/store/31schrd6pyypm6cgzdw00flh0i8q1yvi-source": {
+      "narHash": "sha256-db/8NgfehQlPNt8rMY0J1gvwzTaURU/foM7y/AQimIM=",
+      "narSize": 195961000,
+      "references": []
+    },
+    "/nix/store/35vl1f2z1c5d2wvlx6746jqjklb215x8-pnpmnix-hono-archive-group-b5-b": {
+      "narHash": "sha256-gJGWF47PxJYHXZ/ithTVa5IxDeEN9JPPUa+73xMdPdk=",
+      "narSize": 30055840,
+      "references": []
+    },
+    "/nix/store/3bh76plad7312f1wszkb3a63pq40wg1r-pnpmnix-hono-archive-group-b4-8": {
+      "narHash": "sha256-kMt6p07m02AsrISYFvRslD7AOq7PCYaNEFSQrWX3Rkk=",
+      "narSize": 131953728,
+      "references": []
+    },
+    "/nix/store/3d8fq1qhxwc2n079zyg8dg7fniqbwrap-pnpmnix-hono-archive-group-b4-d": {
+      "narHash": "sha256-GIA6jb2W6dT+823QGrgE28JlLyPp8q5GswjUekn8hq8=",
+      "narSize": 106216392,
+      "references": []
+    },
+    "/nix/store/3hk8njc1qb2ddcjhycpmkdj2ly32jblz-pnpmnix-hono-archive-group-b5-14": {
+      "narHash": "sha256-CXSUD1MZsKYJQlOzK/uZNGFCcmwEMLXgy487nH+9hIs=",
+      "narSize": 49269048,
+      "references": []
+    },
+    "/nix/store/4v9g7c67j700740vmyqpqfb2lax85642-pnpmnix-hono-archive-group-b4-c": {
+      "narHash": "sha256-nPlbyYwBqkAtrxsVQZ3z/ko0ih8xEkdCYrA0D0QbsLs=",
+      "narSize": 110326008,
+      "references": []
+    },
+    "/nix/store/4vh23ghzpmmfr5qss2i4c49x3673d3vi-pnpmnix-hono-archive-group-b4-6": {
+      "narHash": "sha256-me5YpFSX1OGdJYvYsllRi6syIwZIQZWCTFjJGDY+REs=",
+      "narSize": 104460584,
+      "references": []
+    },
+    "/nix/store/5r3iyligvs3jxqn2s0jv4zf99v5cw6kj-pnpmnix-hono-archive-group-b4-2": {
+      "narHash": "sha256-5QCZelZTq0UYoP6mwJY7wPw/dAhxfpd484DGZEMKcD8=",
+      "narSize": 115128800,
+      "references": []
+    },
+    "/nix/store/6zvmzkcg8sz2n5iw7fgxwijsw1l8xpdh-pnpmnix-hono-archive-group-b5-17": {
+      "narHash": "sha256-Y+h/+eRRGIfSeXtgK5gqNPCmtwAkLr4806QsG707OTc=",
+      "narSize": 44562304,
+      "references": []
+    },
+    "/nix/store/70lbqiq01h8q344v3jxxfldi1ynvs3jx-pnpmnix-hono-archive-group-b5-1f": {
+      "narHash": "sha256-213AI3Wga1fhupYg8GzTkWxHlKuAsWzOT+PXLbYNBYo=",
+      "narSize": 109252144,
+      "references": []
+    },
+    "/nix/store/7ajmmjqqkjw1lmwbpk88h59chc9fmkdd-pnpmnix-hono-archive-group-b5-12": {
+      "narHash": "sha256-guRBjvSpD8cD7NvClHFhMclqS3mYd4BDoP7J+D7K9w4=",
+      "narSize": 58063536,
+      "references": []
+    },
+    "/nix/store/7xrz17x5ndsf9kfyy4ckgpvjcqfjx2hh-pnpmnix-hono-archive-group-b5-1d": {
+      "narHash": "sha256-7alBuigIye3xEiZNPTJaBkpblsKiPV5NMLBXbxaSTY8=",
+      "narSize": 53904912,
+      "references": []
+    },
+    "/nix/store/c6mhpynb4yfa9m6dknbp4h2ph76ny5yq-pnpmnix-hono-archive-group-b5-15": {
+      "narHash": "sha256-oV8wLkc2LjuU6hl3627hAsGL+z6M22TaihzFnOXAyak=",
+      "narSize": 87991344,
+      "references": []
+    },
+    "/nix/store/dbkmsq57ry5idgqz71vf3z87yz7f7g7b-pnpmnix-hono-source-08a023cb": {
+      "narHash": "sha256-78+4pli2nrZoh4hLsYjFkZs6sh8YgpaiBauQfaO2ghE=",
+      "narSize": 5167344,
+      "references": []
+    },
+    "/nix/store/hi7lp7mxbaq7vy0fkn8bnmjf7msp92qg-pnpmnix-hono-archive-group-b5-f": {
+      "narHash": "sha256-M9Nung/oLbCnxa0/O+whXAfKJ6fDiXjcZoE0B9kBfu0=",
+      "narSize": 100029936,
+      "references": []
+    },
+    "/nix/store/hk0gzb9h9b992dsxwdr7cyh50yvjqx63-pnpmnix-hono-archive-group-b5-3": {
+      "narHash": "sha256-0s4DJQt/W2HALKe6D1khMT7fVExN0y5C6KRjqa9wKuw=",
+      "narSize": 48819128,
+      "references": []
+    },
+    "/nix/store/hpn4vi1041g9iz1xgmrrz6iz3xl5fyn5-pnpmnix-hono-archive-group-b4-0": {
+      "narHash": "sha256-pZTbKgV/ZOsbapPZQGWPT658zwUMd/TaymKuU8xCBzI=",
+      "narSize": 144618600,
+      "references": []
+    },
+    "/nix/store/jrk97rb8d6p9s8r91aqkkicafzc67bx5-pnpmnix-hono-archive-group-b5-a": {
+      "narHash": "sha256-qcG5JCPPhS5ylzY/JdQkDiup3K5g+M5N8EjKM/5dU2c=",
+      "narSize": 76038352,
+      "references": []
+    },
+    "/nix/store/mplg495zk9njpa3rrnwwna8z2ni3jhyd-pnpmnix-hono-archive-group-b5-e": {
+      "narHash": "sha256-d9XkDzSJQjaN7SGYsyTCizdRpLXVMKiJAKKD0d2zce4=",
+      "narSize": 76114944,
+      "references": []
+    },
+    "/nix/store/q4znz2par3dd50b5vnxvrsfnq7wxzb5v-pnpmnix-hono-archive-group-b5-16": {
+      "narHash": "sha256-XBDC1DWwF7QbyppMcitTMegLDZmK2i6BelMbWJlkiJk=",
+      "narSize": 92874784,
+      "references": []
+    },
+    "/nix/store/rjzgj262y5dldj53f3jq39zrg2s26fmd-pnpmnix-hono-archive-group-b5-2": {
+      "narHash": "sha256-10I0/H7bCOp9u9qY2G/Xiq91YocRCdQ9oyoWX8BZUaA=",
+      "narSize": 93055000,
+      "references": []
+    },
+    "/nix/store/xbx0cwfs96acl7rdjqzm3sagfihxj4bz-pnpmnix-hono-archive-group-b5-6": {
+      "narHash": "sha256-T4vLFKHt1YfvCjpYsKHt6kPYbHr/a/13Y77krh0V4c0=",
+      "narSize": 77595800,
+      "references": []
+    },
+    "/nix/store/zaibg1hfy271w7z8rl2cdlpjwlmrykik-pnpmnix-hono-archive-group-b5-9": {
+      "narHash": "sha256-9BdilEyCIDTiJ+mz6J2HQT5BAYZSMjtl43D7JhwLzZk=",
+      "narSize": 36188512,
+      "references": []
+    },
+    "/nix/store/zj6i3874riz8qvjsd39pza2nzjkay1h7-pnpmnix-hono-archive-group-b5-1c": {
+      "narHash": "sha256-NyeOSqdpUuAjR7u1iQVCVt6Zg4pAacDcYs7WQuWj9fg=",
+      "narSize": 87644752,
+      "references": []
+    },
+    "/nix/store/znpc2dpf0582fh3mzc1ma4cc1ps8nwxl-pnpmnix-hono-archive-group-b5-1e": {
+      "narHash": "sha256-tUK9WWDJPq6qcSIyPiBsfaW7foflDsVmQui6DuQ5+6s=",
+      "narSize": 49287560,
+      "references": []
+    }
+  }
+}
